@@ -1,0 +1,365 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+    }
+    .video-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .video-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+      return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
+      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+        try {
+          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+          var firstSheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[firstSheetName];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+          var filteredData = jsonData.filter(row => row.some(filledCell));
+          var headerRowIndex = filteredData.findIndex((row, index) =>
+            row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+          );
+          if (headerRowIndex === -1 || headerRowIndex > 25) {
+            headerRowIndex = 0;
+          }
+          var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+          return csv;
+        } catch (e) {
+          console.error(e);
+          return "";
+        }
+      }
+      return gk_fileData[filename] || "";
+    }
+  </script>
+
+  <header class="bg-blue-900 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-4xl font-bold">Danrei Vidal</h1>
+      <p class="text-lg mt-2">Professional Video Editing Portfolio</p>
+      <p class="mt-2">Showcasing some of my best work in video production and editing</p>
+    </div>
+  </header>
+
+  <section class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Video Card 1 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1911941455897378946" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/TxVAhYx.jpeg" alt="Thumbnail for Project Title 1" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Solana Accelerate Promo - Contentathon 2025</h3>
+          <p class="text-gray-600 mt-2">2nd-place winner in Solana Contentathon 2025, this promo video for Solana Accelerate 2025 (NYC, May 19-23) captures the event’s vibrant energy, showcasing Solana’s innovative blockchain ecosystem, Scale or Die and Ship or Die tracks, and uniting developers, founders, and fintech leaders.</p>
+        </div>
+      </div>
+      <!-- Video Card 2 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1898599883923403048" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/CHCDXWL.jpeg" alt="Thumbnail for Project Title 2" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">SEND AI - Solana Agent Kit SGCC</h3>
+          <p class="text-gray-600 mt-2">This video showcases what AI video can do, AI voice clone, AI Lip Sync, AI claymation</p>
+        </div>
+      </div>
+      <!-- Video Card 3 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1889982252253429764" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/qehvQ9f.jpeg" alt="Thumbnail for Project Title 3" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Blockchain Campus Conference 2025 - Teaser / Trailer</h3>
+          <p class="text-gray-600 mt-2">This teaser video for BCC 2025 highlights the conference’s essence and previews the exciting experiences awaiting attendees.</p>
+        </div>
+      </div>
+      <!-- Video Card 4 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1837784742164373662" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/2y5C3YE.jpeg" alt="Thumbnail for Project Title 4" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Superteam Philippines at Solana Breakpoint 2024</h3>
+          <p class="text-gray-600 mt-2">The title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 5 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1831504436705030516" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/tsQbA49.jpeg" alt="Thumbnail for Project Title 5" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Buildstation x Ecosystem Call Teaser - September 2024</h3>
+          <p class="text-gray-600 mt-2">Teaser of Back-to-back event of Buildstation and Solana Ecosystem Call back in September 2024.</p>
+        </div>
+      </div>
+      <!-- Video Card 6 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1829821442629976216" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/e8yp9wV.jpeg" alt="Thumbnail for Project Title 6" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Solana Ecosystem Call - September 2024 Teaser</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 7 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1826849523072950426" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/4FyrD8Z.jpeg" alt="Thumbnail for Project Title 7" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Wormhole Buildstation</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 8 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1823744162531082605" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/z4uG7J3.jpeg" alt="Thumbnail for Project Title 8" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Wormhole x SuperteamPHL Buildstation Teaser</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 9 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1821031350646009930" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/ivbdXsC.jpeg" alt="Thumbnail for Project Title 9" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Philippine Game Dev Expo 2024 - Game Jam Demo Day</h3>
+          <p class="text-gray-600 mt-2">A report of Solana Game Jam Demo Day at the Philippine Game Dev Expo 2024.</p>
+        </div>
+      </div>
+      <!-- Video Card 10 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1815578595299098793" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/I7PACyX.jpeg" alt="Thumbnail for Project Title 10" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Blockchain Campus Conference 2024 Teaser</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 11 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1815640757241561088" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/7ynRUrn.jpeg" alt="Thumbnail for Project Title 11" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Solana Blinks Buidlstation - Blinkstation</h3>
+          <p class="text-gray-600 mt-2">Solana Blinkstation Edutainment.</p>
+        </div>
+      </div>
+      <!-- Video Card 12 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1809405831726961142" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/GQ9C0i4.jpeg" alt="Thumbnail for Project Title 12" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Coins PH - Jen Bilango on Solana Launch in Philippines</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 13 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1797458539461718472" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/PuhDyYb.jpeg" alt="Thumbnail for Project Title 13" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">1st Mad Lads PH Meetup Highlights</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 14 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1793100048185860464" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/7Kc0uCe.jpeg" alt="Thumbnail for Project Title 14" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">SuperteamPHL Bitcoin Pizza Day 2024</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 15 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1791354080612540715" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/lvMIW24.jpeg" alt="Thumbnail for Project Title 15" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Todd McFarlane joins Web3 via Drip</h3>
+          <p class="text-gray-600 mt-2">Wins of the month during April 2024.</p>
+        </div>
+      </div>
+      <!-- Video Card 16 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1789159329435992333" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/7tVC5az.jpeg" alt="Thumbnail for Project Title 16" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Mad Lads PH Meetup Teaser</h3>
+          <p class="text-gray-600 mt-2">Fock it.</p>
+        </div>
+      </div>
+      <!-- Video Card 17 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1786312873746354601" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/LQpPf09.jpeg" alt="Thumbnail for Project Title 17" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Solana Ecosystem Call May 2024 Teaser - May the 4th be with you</h3>
+          <p class="text-gray-600 mt-2">May the 4th be with you.</p>
+        </div>
+      </div>
+      <!-- Video Card 18 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1778444562060767522" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/DgBvCxr.jpeg" alt="Thumbnail for Project Title 18" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Solana Renaissance Hackathon Philippine Demo Day Teaser</h3>
+          <p class="text-gray-600 mt-2">Solana Superteam Philippines Hackathon Demo Day Featuring AI generated images used in the edit.</p>
+        </div>
+      </div>
+      <!-- Video Card 19 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1851053902848028750" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/pqbPRu3.jpeg" alt="Thumbnail for Project Title 19" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">DVin fast-paced Wine Video Bounty</h3>
+          <p class="text-gray-600 mt-2">This video snagged 2nd place in the competition.</p>
+        </div>
+      </div>
+      <!-- Video Card 20 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1861206471314493449" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/Z4V26mc.jpeg" alt="Thumbnail for Project Title 20" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Swipe.fun demo video</h3>
+          <p class="text-gray-600 mt-2">This video features a motion gfx and an edit.</p>
+        </div>
+      </div>
+      <!-- Video Card 21 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1767562335399317520" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/25BjHZA.jpeg" alt="Thumbnail for Project Title 21" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Solana Ecosystem Call Philippines - March 2024</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 22 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1755601384400212010" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/bNy5Vh7.jpeg" alt="Thumbnail for Project Title 22" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Solana Ecosystem Call Philippines - February 2024 Teaser</h3>
+          <p class="text-gray-600 mt-2">1st Solana Superteam Philippines Ecosystem Call.</p>
+        </div>
+      </div>
+      <!-- Video Card 23 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1751148404691091756" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/AwkWmux.jpeg" alt="Thumbnail for Project Title 23" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Solana Superteam Philippines Launch Video</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+      <!-- Video Card 24 -->
+      <div class="video-card bg-white rounded-lg shadow-lg overflow-hidden">
+        <a href="https://x.com/i/status/1753385940746400113" target="_blank" class="block w-full aspect-video">
+          <img src="https://i.imgur.com/sPLCMB9.jpeg" alt="Thumbnail for Project Title 24" class="w-full h-full object-cover" loading="lazy">
+        </a>
+        <div class="p-4">
+          <h3 class="text-xl font-semibold">Superteams greetings</h3>
+          <p class="text-gray-600 mt-2">Title said it all.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-blue-900 text-white py-6 text-center">
+    <div class="container mx-auto px-4">
+      <p>Contact me at: <a href="mailto:your.email@example.com" class="underline">danreipogi@gmail.com</a></p>
+      <p class="mt-2">© 2025 Danrei Vidal. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>
